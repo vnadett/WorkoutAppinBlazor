@@ -1,0 +1,39 @@
+﻿@page "/user/users"
+@using BlazorTest.Models
+@using BlazorTest.Data
+
+@inject IDataAccess _db
+<h3>Users</h3>
+
+
+
+<h4>Current Users </h4>
+@if (users is null)
+{
+<p><em>Loading...</em></p> }
+else
+{
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Username</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in users)
+        {
+<tr>
+    <td>@user.Email</td>
+    <td>@user.UserName</td>
+</tr>
+}
+    </tbody>
+</table>}
+@code { private List<User> users;
+    private User newUser = new User();
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await _db.GetUsers();
+    } }

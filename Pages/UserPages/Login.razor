@@ -1,0 +1,99 @@
+﻿@page "/user/login"
+
+@using BlazorTest.Models
+@using BlazorTest.Data
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+
+@inject IDataAccess _db
+@inject NavigationManager NavManager
+@inject ProtectedSessionStorage storage
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #17a2b8;
+        height: 100vh;
+    }
+
+    #login .container #login-row #login-column #login-box {
+        margin-top: 120px;
+        max-width: 600px;
+        height: 320px;
+        border: 1px solid #9C9C9C;
+        background-color: #EAEAEA;
+    }
+
+        #login .container #login-row #login-column #login-box #login-form {
+            padding: 20px;
+        }
+
+            #login .container #login-row #login-column #login-box #login-form #register-link {
+                margin-top: -85px;
+            }
+</style>
+
+
+<div class="container">
+    <div id="login-row" class="row justify-content-center align-items-center">
+        <div id="login-column" class="col-md-6">
+            <div id="login-box" class="col-md-12">
+                <p style="color: #ff0000">@alert</p>
+                <EditForm Model="@userLogin" OnSubmit="@LoginUser">
+                    <h3 class="text-center text-info">Login</h3>
+                    <div class="form-group">
+                        <label for="user" class="label">Felhasználónév</label>
+                        <InputText id="UserName" type="text" class="input" @bind-Value="userLogin.UserName" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="pass" class="label">Jelszó</label>
+                        <InputText id="Password" type="password" class="input" data-type="password" @bind-Value="userLogin.Password" required />
+                    </div>
+                    <div class="form-group">
+                        <br>
+                        <input type="submit" name="submit" class="btn btn-info btn-md" value="submit">
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code { private List<User> users;
+    private User userLogin = new User();
+    private string alert;
+
+    protected async Task LoginUser()
+    {
+        alert = "Bejelentkezés...";
+        User u = new User
+        {
+            UserName = userLogin.UserName,
+            Password = userLogin.Password
+        };
+        users = await _db.GetUsers();
+
+        if (users != null)
+        {
+            foreach (var user in users)
+            {
+                if (user.UserName == u.UserName && BCrypt.Net.BCrypt.Verify(u.Password, user.Password))
+                {
+                    await storage.SetAsync("userid", user.Id);
+                    await storage.SetAsync("username", user.UserName);
+                    NavManager.NavigateTo("/user/profile");
+                }
+                else
+                {
+                    alert = "A felhasználónév vagy jelszó nem megfelelő!";
+
+                }
+            }
+        }
+        else
+        {
+            alert = "A felhasználónév vagy jelszó nem megfelelő!";
+
+        }
+    } }

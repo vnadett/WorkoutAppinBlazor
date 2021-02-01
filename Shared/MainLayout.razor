@@ -1,0 +1,48 @@
+﻿@inherits LayoutComponentBase
+
+@using BlazorTest.Models
+@using BlazorTest.Data
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+
+@inject IDataAccess _db
+@inject NavigationManager NavManager
+@inject ProtectedSessionStorage storage
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <div class="main">
+        <div class="top-row px-4">
+            @if (loggedIn)
+            {<button class="btn btn-light" @onclick="LogOut">Kijelentkezés</button>}
+        </div>
+
+        <div class="content px-4">
+            @Body
+        </div>
+    </div>
+</div>
+@code{ private bool loggedIn = false;
+
+    private async void LogOut()
+    {
+        await storage.DeleteAsync("userid");
+        await storage.DeleteAsync("username");
+
+        NavManager.NavigateTo("/user/login");
+    }
+    protected override async Task OnAfterRenderAsync(bool render)
+    {
+
+        var id = await storage.GetAsync<int>("userid");
+
+
+        if (id.Success)
+        {
+            loggedIn = true;
+        }
+        else { loggedIn = false; }
+        StateHasChanged();
+
+    } }

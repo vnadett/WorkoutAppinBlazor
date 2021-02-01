@@ -1,0 +1,70 @@
+﻿@using BlazorTest.Models
+@using BlazorTest.Data
+
+@inject IDataAccess _db
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@inject ProtectedSessionStorage storage
+
+
+<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">Workout Application</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="/user/users">
+                <span class="oi oi-people" aria-hidden="true"></span> Users
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="/user/registration">
+                <span class="oi oi-cloud-upload" aria-hidden="true"></span> Regisztráció
+            </NavLink>
+        </li>
+        @if (loggedIn)
+        {
+
+<li class="nav-item px-3">
+    <NavLink class="nav-link" href="/user/profile">
+        <span class="oi oi-person" aria-hidden="true"></span> Profil
+    </NavLink>
+</li> }
+            else
+            {
+<li class="nav-item px-3">
+    <NavLink class="nav-link" href="/user/login">
+        <span class="oi oi-account-login" aria-hidden="true"></span> Bejelentkezés
+    </NavLink>
+</li>
+}
+    </ul>
+</div>
+
+@code { private bool loggedIn = false;
+
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+    protected override async Task OnAfterRenderAsync(bool render)
+    {
+
+        var id = await storage.GetAsync<int>("userid");
+
+
+        if (id.Success)
+        {
+            loggedIn = true;
+        }
+        else { loggedIn = false; }
+        StateHasChanged();
+
+    } }

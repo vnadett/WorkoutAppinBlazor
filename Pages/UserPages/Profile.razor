@@ -1,0 +1,64 @@
+﻿@page "/user/profile"
+
+@using BlazorTest.Models
+@using BlazorTest.Data
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+
+@inject IDataAccess _db
+@inject NavigationManager NavManager
+@inject ProtectedSessionStorage storage
+
+@if (firstName != null && lastName != null)
+{
+
+<h3>Hello @firstName @lastName !</h3> }
+else
+{
+
+<h3>Hello @userName !</h3>}
+
+
+
+@code { private User userProfile = new User();
+    private List<User> users;
+    private string userName;
+    private string email;
+    private int asd;
+
+#nullable enable
+    private string? firstName;
+    private string? lastName;
+    private int? weight;
+    private int? height;
+    private int? age;
+    protected override async Task OnInitializedAsync()
+    {
+
+        var userid = await storage.GetAsync<int>("userid");
+        var name = await storage.GetAsync<string>("username");
+        asd = userid.Value;
+
+        users = await _db.GetUsers();
+        if (users != null)
+        {
+            foreach (var user in users)
+            {
+                if (user.Id == userid.Value)
+                {
+                    userName = user.UserName;
+                    email = user.Email;
+                    if (user.UserDetail != null)
+                    {
+                        firstName = user.UserDetail.FirstName;
+                        lastName = user.UserDetail.LastName;
+                        weight = user.UserDetail.Weight;
+                        height = user.UserDetail.Height;
+                        age = user.UserDetail.Age;
+                    }
+
+                }
+            }
+        }
+
+
+    } }
