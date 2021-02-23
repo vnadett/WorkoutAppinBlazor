@@ -26,5 +26,18 @@ namespace BlazorTest.Data
 
             return _db.SaveData(sql, user);
         }
+        public Task<List<UserDetail>> GetUserDetails(int id)
+        {
+            string sql = "select * from [UserDetail]" +
+                " where [UserDetail].UserId=" + id;
+
+            return _db.LoadData<UserDetail, dynamic>(sql, new { });
+        }
+        public Task InsertDetails(UserDetail userDetail, int id)
+        {
+            string sql = @"insert into [UserDetail](FirstName, LastName, Height, Weight, Age, UserId)
+                        values (@FirstName, @LastName, @Height, @Weight, @Age, " + id + ")";
+            return _db.SaveData(sql, userDetail);
+        }
     }
 }

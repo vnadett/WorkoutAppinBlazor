@@ -19,5 +19,6 @@ namespace BlazorTest.Models
         public int Weight { get; set; }
         [DisplayName("Kor")]
         public int Age { get; set; }
+        public virtual User User { get; set; }
     }
 }

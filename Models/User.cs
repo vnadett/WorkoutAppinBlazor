@@ -28,6 +28,6 @@ namespace BlazorTest.Models
         [DataType(DataType.Password)]
         [System.ComponentModel.DataAnnotations.Compare("Password")]
         public string ConfirmPassword { get; set; }
-        public virtual UserDetail UserDetail { get; set; }
+
     }
 }
