@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorTest.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210127191258_initialMigration")]
-    partial class initialMigration
+    [Migration("20210201131410_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -38,17 +38,12 @@ namespace BlazorTest.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int?>("UserDetailId")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserDetailId");
 
                     b.ToTable("User");
                 });
@@ -74,21 +69,26 @@ namespace BlazorTest.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Weight")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("UserDetail");
                 });
 
-            modelBuilder.Entity("BlazorTest.Models.User", b =>
+            modelBuilder.Entity("BlazorTest.Models.UserDetail", b =>
                 {
-                    b.HasOne("BlazorTest.Models.UserDetail", "UserDetail")
+                    b.HasOne("BlazorTest.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserDetailId");
+                        .HasForeignKey("UserId");
 
-                    b.Navigation("UserDetail");
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

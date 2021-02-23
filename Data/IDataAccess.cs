@@ -6,7 +6,9 @@ namespace BlazorTest.Data
 {
     public interface IDataAccess
     {
+        Task<List<UserDetail>> GetUserDetails(int id);
         Task<List<User>> GetUsers();
+        Task InsertDetails(UserDetail userDetail, int id);
         Task InsertUser(User user);
     }
 }

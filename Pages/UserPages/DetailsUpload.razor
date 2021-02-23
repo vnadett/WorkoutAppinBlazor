@@ -1,0 +1,115 @@
+﻿@page "/user/detailsupload"
+@using BlazorTest.Models
+@using BlazorTest.Data
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+
+@inject IDataAccess _db
+@inject NavigationManager NavManager
+@inject ProtectedSessionStorage storage
+<head>
+    <style>
+        .note {
+            text-align: center;
+            height: 80px;
+            background: -webkit-linear-gradient(left, #0072ff, #8811c5);
+            color: #fff;
+            font-weight: bold;
+            line-height: 80px;
+        }
+
+        .form-content {
+            padding: 5%;
+            border: 1px solid #ced4da;
+            margin-bottom: 2%;
+        }
+
+        .form-control {
+            border-radius: 1.5rem;
+        }
+
+        .btnSubmit {
+            border: none;
+            border-radius: 1.5rem;
+            padding: 1%;
+            width: 20%;
+            cursor: pointer;
+            background: #fff;
+            color: #fff;
+        }
+
+        body {
+            background-image: url("https://wallpaperaccess.com/full/1078038.jpg");
+            background-color: #fff;
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        label {
+            color: #fff;
+        }
+
+        h4 {
+            color: #fff;
+        }
+    </style>
+</head>
+<h4>Regisztráció</h4>
+<div class="container register-form">
+
+    <EditForm Model="@userDetail" OnValidSubmit="@InserUserDetails">
+
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="form-content">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+
+                        <label for="firsname">Keresztnév</label>
+                        <InputText class="form-control" id="firsname" @bind-Value="@userDetail.FirstName" />
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname">Vezetéknév</label>
+                        <InputText class="form-control" id="lastname" @bind-Value="@userDetail.LastName" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="weight">Súly</label>
+                        <InputNumber class="form-control" id="weight" @bind-Value="@userDetail.Weight" />
+                    </div>
+                    <div class="form-group">
+                        <label for="height">Magasság (cm)</label>
+                        <InputNumber class="form-control" id="height" @bind-Value="@userDetail.Height" />
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="age">Kor</label>
+                        <InputNumber class="form-control" id="age" @bind-Value="@userDetail.Age" />
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-dark">Adatok feltöltése</button>
+        </div>
+    </EditForm>
+</div>
+@code { private UserDetail userDetail = new UserDetail();
+
+    private async Task InserUserDetails()
+    {
+        var id = await storage.GetAsync<int>("userid");
+        UserDetail ud = new UserDetail
+        {
+            FirstName = userDetail.FirstName,
+            LastName = userDetail.LastName,
+            Height = userDetail.Height,
+            Weight = userDetail.Weight,
+            Age = userDetail.Age
+        };
+        await _db.InsertDetails(ud, id.Value);
+        NavManager.NavigateTo("/user/profile");
+    } }
