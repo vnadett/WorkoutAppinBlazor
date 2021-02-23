@@ -10,5 +10,6 @@ namespace BlazorTest.Data
         Task<List<User>> GetUsers();
         Task InsertDetails(UserDetail userDetail, int id);
         Task InsertUser(User user);
+        Task UpdateDetails(UserDetail userDetail, int id);
     }
 }

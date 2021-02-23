@@ -18,20 +18,35 @@
             transition: 0.5s;
         }
 
+
+
             .custab:hover {
                 box-shadow: 3px 3px 0px transparent;
                 transition: 0.5s;
             }
+
+        body {
+            background-image: url(http://www.androidguys.com/wp-content/uploads/2015/12/motivational-wallpaper-Motivational-Wallpaper-Workout.jpg);
+            color: antiquewhite;
+        }
+
+        table thead {
+            color: aliceblue;
+        }
+
+        table tr td {
+            color: aliceblue;
+        }
     </style>
 </head>
 @if (firstName != null && lastName != null)
 {
 
-<h3>Hello @firstName @lastName !</h3> }
+<h3>Hello @firstName @lastName!</h3> }
 else
 {
 
-<h3>Hello @userName !</h3>}
+<h3>Hello @userName!</h3>}
 
 <div class="container">
     <div class="row col-lg-6 col-md-offset-4 custyle">
@@ -85,11 +100,14 @@ else
                     {
         <span style="color: #ff0000"><i class="oi oi-warning"></i> Még nincs megadva!</span>}
     else
-    { @age}
+    { @age  }
                 </td>
                 @if (firstName is null && lastName is null && weight is null && height is null && age is null)
                 {
-    <td><a href="/user/detailsupload" class="btn btn-primary">Hiányzó adatok hozzáadása</a></td>
+    <td><a href="/user/detailsupload" class="btn btn-primary">Hiányzó adatok hozzáadása</a></td> }
+                else
+                {
+    <td> <a href="/user/editdetails" class="btn btn-primary"><i class="oi oi-pencil"></i>Szerkesztés</a></td>
 }
             </tr>
         </table>

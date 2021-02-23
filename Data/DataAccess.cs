@@ -39,5 +39,13 @@ namespace BlazorTest.Data
                         values (@FirstName, @LastName, @Height, @Weight, @Age, " + id + ")";
             return _db.SaveData(sql, userDetail);
         }
+
+        public Task UpdateDetails(UserDetail userDetail, int id)
+        {
+            string sql = @"update [UserDetail]
+                            set FirstName = @FirstName, LastName = @LastName, Height = @Height, Weight = @Weight, Age = @Age
+                            where UserId = " + id;
+            return _db.SaveData(sql, userDetail);
+        }
     }
 }
